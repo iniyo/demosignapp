@@ -1,1 +1,0 @@
-[Spring Boot에 Redis Cluster](https://velog.io/@komment/Spring-Boot-Redis-Cluster-with-lettuce-redisson)
