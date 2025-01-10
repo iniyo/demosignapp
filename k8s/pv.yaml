@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-pv-master
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: hostpath
+  hostPath:
+    path: /tmp/redis-data-master # 로컬 경로
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-pv-replica
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: hostpath
+  hostPath:
+    path: /tmp/redis-data-replica # 로컬 경로
