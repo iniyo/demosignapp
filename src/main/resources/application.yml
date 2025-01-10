@@ -50,15 +50,14 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id # ?? ?? ?? ? ???? ??? ????? ?? ??.
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
   data:
     redis:
       cluster:
         nodes:
-          - redis-node1:7001
-          - redis-node2:7002
-          - redis-node3:7003
+          - redis-cluster-master.redis.svc.cluster.local:6379
+          - redis-cluster-slave.redis.svc.cluster.local:6379
       max-redirects: 3
 
 springdoc:

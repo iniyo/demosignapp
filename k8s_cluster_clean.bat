@@ -21,7 +21,7 @@ if errorlevel 1 goto CLEANUP
 
 :: ----------------------------------------------------------------------
 :CLEANUP
-echo [INFO] Deleting all Kubernetes resources in the current namespace...
+echo [INFO] Deleting all Kubernetes resources in the current context...
 kubectl delete all --all
 if errorlevel 1 (
     echo [ERROR] Failed to delete resources. Check your configuration.

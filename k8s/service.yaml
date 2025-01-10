@@ -1,15 +1,18 @@
+# spring-boot-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: service
-  labels:
-    app: demosignapp
+  name: spring-boot-service
+  namespace: redis-cluster
 spec:
   selector:
-    app: demosignapp
+    app: spring-boot-app
   ports:
-    - port: 80
+    - protocol: TCP
+      port: 80
       targetPort: 8080
-      name: http
-      nodePort: 30080
-  type: NodePort # LoadBalancer           # 외부에서 접근 가능하도록 설정
+  persistence:
+    enabled: true
+    storageClass: "hostpath"
+    size: 1Gi
+  type: LoadBalancer

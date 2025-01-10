@@ -1,36 +1,28 @@
-# iniyo/mytestauthserver
-
+# spring-boot-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demosignapp
-  labels:
-    app: demosignapp
+  name: spring-boot-app
+  namespace: redis-cluster
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: demosignapp
+      app: spring-boot-app
   template:
     metadata:
       labels:
-        app: demosignapp
+        app: spring-boot-app
     spec:
       containers:
-        - name: demosignapp
-          image: iniyo/mytestauthserver:latest
+        - name: spring-boot-app
+          image: iniyo/mytestauthserver:latest # 사용자 Docker 이미지
           ports:
             - containerPort: 8080
-              name: http
           env:
-            - name: KAKAO_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: kakao-secret
-                  key: client-id
-            - name: KAKAO_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: kakao-secret
-                  key: client-secret
-          # etc... DB, JWT key 등도 Secret으로 관리 가능
+            - name: REDIS_HOST
+              value: "redis-cluster-master.redis-cluster.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "your_password"

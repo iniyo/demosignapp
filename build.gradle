@@ -2,6 +2,24 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.google.cloud.tools.jib' version '3.4.4'
+}
+
+jib {
+	from {
+		image = 'openjdk:17.0.2-slim' // jdk image
+	}
+	to {
+		image = 'iniyo/mytestauthserver'
+		tags = ['latest'] // Groovy 배열 사용
+	}
+	container { // Jib의 container 블록 명확히 사용
+		jvmFlags = ['-Dserver.port=8080'] // Groovy 배열 사용
+		ports = ['8080'] // 런타임시 노출하는 포트값
+		environment = [ // 환경 변수 설정을 위한 key-value값
+						ENV_VAR_NAME: 'value'
+		]
+	}
 }
 
 group = 'com.example'
@@ -22,6 +40,10 @@ configurations {
 repositories {
 	mavenCentral()
 }
+
+
+
+
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
