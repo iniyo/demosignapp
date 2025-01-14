@@ -1,28 +1,28 @@
-# spring-boot-deployment.yaml
+# deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spring-boot-app
-  namespace: redis-cluster
+  name: redis-demo-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: spring-boot-app
+      app: redis-demo-app
   template:
     metadata:
       labels:
-        app: spring-boot-app
+        app: redis-demo-app
     spec:
       containers:
-        - name: spring-boot-app
-          image: iniyo/mytestauthserver:latest # 사용자 Docker 이미지
+        - name: redis-demo-app
+          image: redis-demo:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
-          env:
-            - name: REDIS_HOST
-              value: "redis-cluster-master.redis-cluster.svc.cluster.local"
-            - name: REDIS_PORT
-              value: "6379"
-            - name: REDIS_PASSWORD
-              value: "your_password"
+#          env:
+#            - name: SPRING_DATA_REDIS_CLUSTER_PASSWORD
+#              value: "CkKGUP39YP"  # 현재 Redis 비밀번호
+#            - name: SPRING_DATA_REDIS_CLUSTER_NODES
+#              value: "my-redis-redis-cluster-0.my-redis-redis-cluster-headless:6379,my-redis-redis-cluster-1.my-redis-redis-cluster-headless:6379,my-redis-redis-cluster-2.my-redis-redis-cluster-headless:6379,my-redis-redis-cluster-3.my-redis-redis-cluster-headless:6379,my-redis-redis-cluster-4.my-redis-redis-cluster-headless:6379,my-redis-redis-cluster-5.my-redis-redis-cluster-headless:6379"
+#            - name: SPRING_DATA_REDIS_CLUSTER_MAX_REDIRECTS
+#              value: "3"

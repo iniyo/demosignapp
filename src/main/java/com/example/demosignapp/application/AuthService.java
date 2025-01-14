@@ -15,48 +15,41 @@ public class AuthService {
     private final TokenService tokenService;
 
     /**
-     * 만료된 AccessToken -> 새 AccessToken 재발급
+     * AccessToken 재발급
      */
     @Transactional
-    public ReissueTokenResult reissueToken(ReissueTokenCommand command) {
-        String oldAccessToken = command.getOldAccessToken();
-        String newToken = tokenProvider.reissueAccessToken(oldAccessToken);
-
-        if (newToken == null) {
-            // 재발급 실패
-            return ReissueTokenResult.builder()
-                    .newAccessToken(null)
-                    .message("재발급 실패(RefreshToken 만료 또는 없음)")
-                    .build();
-        }
+    public ReissueTokenResult reissueToken(String oldAccessToken) {
+        String newAccessToken = tokenProvider.reissueAccessToken(oldAccessToken);
 
         return ReissueTokenResult.builder()
-                .newAccessToken(newToken)
-                .message("새로운 AccessToken 발급 성공")
+                .newAccessToken(newAccessToken)
+                .message(newAccessToken == null ? "재발급 실패" : "재발급 성공")
                 .build();
     }
 
     /**
-     * 로그아웃(= 모든 토큰 무효화)
+     * 모든 토큰 로그아웃
      */
     @Transactional
-    public LogoutResult logout(LogoutCommand command) {
-        tokenService.invalidateUserTokens(command.getMemberKey());
+    public LogoutResult logout(String accessToken) {
+        String memberKey = tokenProvider.getAuthentication(accessToken).getName();
+        tokenService.invalidateUserTokens(memberKey);
+
         return LogoutResult.builder()
-                .message("로그아웃 완료(모든 토큰 무효화)")
-                .invalidatedToken(null)
+                .message("모든 토큰 무효화 완료")
                 .build();
     }
 
     /**
-     * 특정 AccessToken만 무효화
+     * 특정 AccessToken 로그아웃
      */
     @Transactional
-    public LogoutResult logoutSingleToken(LogoutSingleCommand command) {
-        tokenService.invalidateAccessToken(command.getAccessToken());
+    public LogoutResult logoutSingle(String accessToken) {
+        tokenService.invalidateAccessToken(accessToken);
+
         return LogoutResult.builder()
                 .message("해당 토큰만 무효화 완료")
-                .invalidatedToken(command.getAccessToken())
+                .invalidatedToken(accessToken)
                 .build();
     }
 

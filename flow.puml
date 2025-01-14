@@ -5,7 +5,7 @@ participant "MyApp Pod" as MyApp
 participant "Redis Pod" as Redis
 participant "Kakao OAuth" as Kakao
 
-== 소셜 로그인 ==
+== 1. 소셜 로그인 ==
 User -> MyApp: GET /oauth2/authorization/kakao
 MyApp -> Kakao: Redirect for Kakao Login
 Kakao -> MyApp: Callback /login/oauth2/code/kakao
@@ -13,10 +13,19 @@ MyApp -> MyApp: (OAuth2SuccessHandler) Generate JWT
 MyApp -> Redis: Save RefreshToken
 MyApp -> User: Redirect /auth/success?accessToken=JWT
 
-== JWT 사용 ==
-User -> User: Store JWT (LocalStorage, etc.)
-User -> MyApp: API Request (Authorization: Bearer JWT)
-MyApp -> Redis: (Optional) Validate RefreshToken or check session
-MyApp -> User: Return Protected Resource
+== 2. API 요청 처리 ==
+User -> MyApp: API Request with Bearer Token
+alt Token Valid
+    MyApp --> User: Return Protected Resource
+else Token Expired
+    User -> MyApp: POST /auth/reissue with old token
+    MyApp -> Redis: Validate RefreshToken
+    MyApp -> User: Return New AccessToken
+end
+
+== 3. 로그아웃 ==
+User -> MyApp: POST /auth/logout with Bearer Token
+MyApp -> Redis: Remove RefreshToken
+MyApp --> User: Return Logout Success
 
 @enduml

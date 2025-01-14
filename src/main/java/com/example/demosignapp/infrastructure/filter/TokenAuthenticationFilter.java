@@ -21,7 +21,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 @RequiredArgsConstructor
-public class TokenAuthenticationFilter extends OncePerRequestFilter {
+public class TokenAuthenticationFilter extends OncePerRequestFilter { // 각 요청당 1회만 실행되도록 보장해주는 스프링 추상 클래스(OncePerRequestFilter)
 
     private final TokenProvider tokenProvider;
     private static final String TOKEN_PREFIX = "Bearer ";
@@ -34,6 +34,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         String accessToken = resolveToken(request);
 
+        // 토큰 유효성 검사 토큰이 없다면 다음 필터로
         if (StringUtils.hasText(accessToken)) {
             if (tokenProvider.validateToken(accessToken)) {
                 setAuthentication(accessToken);

@@ -1,18 +1,13 @@
-# spring-boot-service.yaml
+# service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: spring-boot-service
-  namespace: redis-cluster
+  name: redis-demo-app-service
 spec:
-  selector:
-    app: spring-boot-app
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
-  persistence:
-    enabled: true
-    storageClass: "hostpath"
-    size: 1Gi
   type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: redis-demo-app

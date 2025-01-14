@@ -1,5 +1,3 @@
-port: 8080
-
 server:
   error:
     whitelabel:
@@ -19,6 +17,17 @@ spring:
       ddl-auto: create-drop  # ??? create-drop. ????? validate/update ???.
     show-sql: true
 
+  data:
+    redis:
+      cluster:
+        password: CkKGUP39YP   # 현재 설정된 비밀번호
+        nodes:
+          - my-redis-redis-cluster-0.my-redis-redis-cluster-headless:6379
+          - my-redis-redis-cluster-1.my-redis-redis-cluster-headless:6379
+          - my-redis-redis-cluster-2.my-redis-redis-cluster-headless:6379
+          - my-redis-redis-cluster-3.my-redis-redis-cluster-headless:6379
+          - my-redis-redis-cluster-4.my-redis-redis-cluster-headless:6379
+          - my-redis-redis-cluster-5.my-redis-redis-cluster-headless:6379
 
   security:
     oauth2:
@@ -52,13 +61,7 @@ spring:
             user-name-attribute: id # ?? ?? ?? ? ???? ??? ????? ?? ??.
 #  autoconfigure:
 #    exclude: org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
-  data:
-    redis:
-      cluster:
-        nodes:
-          - redis-cluster-master.redis.svc.cluster.local:6379
-          - redis-cluster-slave.redis.svc.cluster.local:6379
-      max-redirects: 3
+
 
 springdoc:
   api-docs:

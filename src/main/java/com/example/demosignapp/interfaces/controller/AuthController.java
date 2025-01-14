@@ -3,12 +3,16 @@ package com.example.demosignapp.interfaces.controller;
 import com.example.demosignapp.application.AuthService;
 import com.example.demosignapp.application.auth.LogoutResult;
 import com.example.demosignapp.application.auth.ReissueTokenResult;
+import com.example.demosignapp.infrastructure.jwt.TokenProvider;
+import com.example.demosignapp.infrastructure.util.AuthorizationHeaderUtil;
 import com.example.demosignapp.interfaces.dto.*;
 import com.example.demosignapp.interfaces.mapper.AuthMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 /**
  * Controller는 "DTO ↔ Mapper ↔ (Application)Command/Result"만 처리
@@ -32,49 +36,46 @@ public class AuthController {
         return ResponseEntity.ok("소셜 로그인 성공! 토큰: " + accessToken);
     }
 
-    /**
-     * 만료된 AccessToken 재발급
+     /**
+     * AccessToken 재발급
      */
     @PostMapping("/reissue")
-    public ResponseEntity<ReissueResponseDto> reissue(@Valid @RequestBody ReissueRequestDto dto) {
-        // 1) DTO → Command
-        var command = authMapper.toCommand(dto);
+    public ResponseEntity<ReissueResponseDto> reissue(@RequestHeader(AUTHORIZATION) String authorizationHeader) {
+        // Authorization 헤더에서 Bearer 토큰 추출
+        String oldAccessToken = AuthorizationHeaderUtil.extractBearerToken(authorizationHeader);
 
-        // 2) Application 호출
-        ReissueTokenResult result = authService.reissueToken(command);
+        // AuthService 호출
+        ReissueTokenResult result = authService.reissueToken(oldAccessToken);
 
-        // 3) Result → DTO
-        var responseDto = authMapper.toDto(result);
-
-        return ResponseEntity.ok(responseDto);
+        // 결과를 DTO로 변환하여 반환
+        return ResponseEntity.ok(authMapper.toDto(result));
     }
 
     /**
-     * 로그아웃(= 사용자의 모든 토큰 무효화)
+     * 모든 토큰 로그아웃
      */
     @PostMapping("/logout")
-    public ResponseEntity<LogoutResponseDto> logout(@Valid @RequestBody LogoutRequestDto dto) {
-        // 1) DTO → Command
-        var command = authMapper.toCommandForLogout(dto);
+    public ResponseEntity<LogoutResponseDto> logout(@RequestHeader(AUTHORIZATION) String authorizationHeader) {
+        String accessToken = AuthorizationHeaderUtil.extractBearerToken(authorizationHeader);
 
-        // 2) Application 호출
-        LogoutResult result = authService.logout(command);
+        // AuthService 호출
+        LogoutResult result = authService.logout(accessToken);
 
-        // 3) Result → DTO
-        var responseDto = authMapper.toDto(result);
-
-        return ResponseEntity.ok(responseDto);
+        // 결과를 DTO로 변환하여 반환
+        return ResponseEntity.ok(authMapper.toDto(result));
     }
 
     /**
-     * 특정 AccessToken만 무효화
+     * 특정 AccessToken만 로그아웃
      */
     @PostMapping("/logout/single")
-    public ResponseEntity<LogoutResponseDto> logoutSingle(@Valid @RequestBody LogoutRequestDto dto) {
-        var command = authMapper.toCommandForLogoutSingle(dto);
-        LogoutResult result = authService.logoutSingleToken(command);
-        var responseDto = authMapper.toDto(result);
+    public ResponseEntity<LogoutResponseDto> logoutSingle(@RequestHeader(AUTHORIZATION) String authorizationHeader) {
+        String accessToken = AuthorizationHeaderUtil.extractBearerToken(authorizationHeader);
 
-        return ResponseEntity.ok(responseDto);
+        // AuthService 호출
+        LogoutResult result = authService.logoutSingle(accessToken);
+
+        // 결과를 DTO로 변환하여 반환
+        return ResponseEntity.ok(authMapper.toDto(result));
     }
 }

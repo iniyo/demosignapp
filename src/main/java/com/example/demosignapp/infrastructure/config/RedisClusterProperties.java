@@ -12,8 +12,7 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties(prefix = "spring.data.redis.cluster")
 public class RedisClusterProperties {
-
     private String password;
-    private int maxRedirects;
+    private int maxRedirects = 3; // 기본값 설정
     private List<String> nodes;
 }
