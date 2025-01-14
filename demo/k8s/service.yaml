@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-app
+  namespace: default
+spec:
+  selector:
+    app: auth-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30080  # NodePort 설정 (30000~32767 범위에서 선택 가능)
+  type: NodePort
+
+# 주석: 클라우드 환경에서 사용할 LoadBalancer 타입 예시
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: auth-app
+#   namespace: default
+# spec:
+#   selector:
+#     app: auth-app
+#   ports:
+#     - protocol: TCP
+#       port: 80
+#       targetPort: 8080
+#   type: LoadBalancer
