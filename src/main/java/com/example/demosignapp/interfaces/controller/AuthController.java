@@ -3,11 +3,10 @@ package com.example.demosignapp.interfaces.controller;
 import com.example.demosignapp.application.AuthService;
 import com.example.demosignapp.application.auth.LogoutResult;
 import com.example.demosignapp.application.auth.ReissueTokenResult;
-import com.example.demosignapp.infrastructure.jwt.TokenProvider;
 import com.example.demosignapp.infrastructure.util.AuthorizationHeaderUtil;
-import com.example.demosignapp.interfaces.dto.*;
+import com.example.demosignapp.interfaces.dto.LogoutResponseDto;
+import com.example.demosignapp.interfaces.dto.ReissueResponseDto;
 import com.example.demosignapp.interfaces.mapper.AuthMapper;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,7 @@ public class AuthController {
         return ResponseEntity.ok("소셜 로그인 성공! 토큰: " + accessToken);
     }
 
-     /**
+    /**
      * AccessToken 재발급
      */
     @PostMapping("/reissue")
