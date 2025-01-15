@@ -23,7 +23,7 @@ public class AuthService {
 
         return ReissueTokenResult.builder()
                 .newAccessToken(newAccessToken)
-                .message(newAccessToken == null ? "재발급 실패" : "재발급 성공")
+                .message(newAccessToken == null ? "AccessToken이 성공적으로 재발급에 실패했습니다." : "AccessToken이 성공적으로 재발급되었습니다.")
                 .build();
     }
 
@@ -36,7 +36,7 @@ public class AuthService {
         tokenService.invalidateUserTokens(memberKey);
 
         return LogoutResult.builder()
-                .message("모든 토큰 무효화 완료")
+                .message("모든 토큰이 무효화되었습니다.")
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class AuthService {
         tokenService.invalidateAccessToken(accessToken);
 
         return LogoutResult.builder()
-                .message("해당 토큰만 무효화 완료")
+                .message("AccessToken이 무효화되었습니다.")
                 .invalidatedToken(accessToken)
                 .build();
     }

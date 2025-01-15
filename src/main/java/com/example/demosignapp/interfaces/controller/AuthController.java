@@ -26,7 +26,6 @@ public class AuthController {
 
     /**
      * testUrl: http://localhost:8080/oauth2/authorization/kakao
-     * Redis 하나 실행: docker run -d -p 6379:6379 --name my-redis redis:latest
      * 소셜 로그인 성공 후 (OAuth2SuccessHandler) -> /auth/success?accessToken=xxx
      */
     @GetMapping("/success")
